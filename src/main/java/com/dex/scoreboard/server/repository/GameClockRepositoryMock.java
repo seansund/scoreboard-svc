@@ -25,7 +25,6 @@ public class GameClockRepositoryMock implements GameClockRepository {
     private final Subject<GameClock> subject;
     private final Subject<ClockControl> controlSubject;
     private GameClock currentClock;
-    private boolean started = false;
 
     public GameClockRepositoryMock() {
         currentClock = GameClock.createGameClock(periodLengthMinutes * 60, 1);
@@ -35,30 +34,30 @@ public class GameClockRepositoryMock implements GameClockRepository {
 
         final Observable<GameClock> timerObs = Observable
                 .interval(0, 1, TimeUnit.SECONDS)
-                .map((Long tick) -> currentClock = currentClock.tick());
+                .map((Long tick) -> currentClock = currentClock.tick(true));
 
         controlSubject
                 .switchMap((ClockControl control) -> {
                     switch (control) {
                         case START -> {
-                            this.started = true;
+                            currentClock = currentClock.start();
                             return timerObs;
                         }
                         case STOP -> {
-                            this.started = false;
-                            return EMPTY;
+                            currentClock = currentClock.stop();
+                            return fromIterable(singletonList(currentClock));
                         }
                         case RESET -> {
                             currentClock = currentClock.reset(periodLengthMinutes * 60);
 
-                            if (started) {
+                            if (currentClock.isRunning()) {
                                 return timerObs;
                             } else {
                                 return fromIterable(singletonList(currentClock));
                             }
                         }
                         case UPDATE -> {
-                            if (started) {
+                            if (currentClock.isRunning()) {
                                 return timerObs;
                             } else {
                                 return fromIterable(singletonList(currentClock));

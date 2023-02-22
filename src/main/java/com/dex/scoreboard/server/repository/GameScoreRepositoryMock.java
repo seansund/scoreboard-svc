@@ -32,9 +32,7 @@ public class GameScoreRepositoryMock implements GameScoreRepository {
 
     @Override
     public GameScore publishScore(GameScore score) {
-        if (!score.equals(getCurrentScore())) {
-            subject.onNext(score);
-        }
+        subject.onNext(score);
 
         return score;
     }

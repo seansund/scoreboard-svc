@@ -37,11 +37,13 @@ type Subscription {
 type Game {
     home: Team!
     away: Team!
+    title: String!
 }
 
 type GameClock {
     time: Int!
     period: Int!
+    running: Boolean!
 }
 
 type GameScore {

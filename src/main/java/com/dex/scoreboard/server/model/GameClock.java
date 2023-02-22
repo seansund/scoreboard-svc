@@ -6,22 +6,38 @@ import lombok.Data;
 public class GameClock {
     private int time;
     private int period;
+    private boolean running;
 
     public static GameClock createGameClock(int time, int period) {
+        return createGameClock(time, period, false);
+    }
+
+    public static GameClock createGameClock(int time, int period, boolean running) {
         final GameClock clock = new GameClock();
 
         clock.time = time;
         clock.period = period;
+        clock.running = running;
 
         return clock;
     }
 
-    public GameClock tick() {
-        if (time == 0) {
+    public GameClock stop() {
+        return createGameClock(time, period, false);
+    }
+
+    public GameClock start() {
+        return createGameClock(time, period, true);
+    }
+
+    public GameClock tick(boolean running) {
+        if (time == 0 && running) {
+            return createGameClock(time, period, false);
+        } else if (time == 0) {
             return this;
         }
 
-        return createGameClock(this.time - 1, this.period);
+        return createGameClock(this.time - 1, this.period, running);
     }
 
     public GameClock reset(int time) {

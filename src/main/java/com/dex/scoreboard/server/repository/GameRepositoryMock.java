@@ -12,7 +12,11 @@ public class GameRepositoryMock implements GameRepository {
     private final Game currentGame;
 
     public GameRepositoryMock() {
-        currentGame = Game.createGame(Team.createTeam("Grace", "navy"), Team.createTeam("Harvest", "Maroon"));
+        currentGame = Game.createGame(
+                Team.createTeam("Grace", "navy"),
+                Team.createTeam("Harvest", "Maroon"),
+                "Semifinal"
+        );
     }
 
     @Override
